@@ -43,7 +43,8 @@ FetchContent_MakeAvailable(ENet)
 # Executable
 # =========================================================
 file(GLOB_RECURSE SOURCES src/*.cpp)
-add_executable(${PROJECT_NAME} ${SOURCES})
+file(GLOB_RECURSE HEADERS src/*.h)
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # Link SDL3 and ENet
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3 enet)
