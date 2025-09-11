@@ -42,7 +42,7 @@ FetchContent_MakeAvailable(ENet)
 # =========================================================
 # Executable
 # =========================================================
-file(GLOB SOURCES src/*.cpp)
+file(GLOB_RECURSE SOURCES src/*.cpp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Link SDL3 and ENet
