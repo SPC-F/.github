@@ -1,42 +1,43 @@
 # 💾 Global CMakeLists template 
 
-A basic CMakeLists template that utilizes SDL3 and enet which is cross platform and indepedent.
+A basic CMakeLists.txt template that utilizes SDL3 and ENet which is cross platform and indepedent.
 
 ```cmake
-cmake_minimum_required(VERSION 3.24)
-project(<PROJECTNAME>)
+# =========================================================
+# Configuration
+# =========================================================
+cmake_minimum_required(VERSION 3.5)
+project(<PROJECT_NAME>)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(FetchContent)
 
 # =========================================================
-# SDL3 (prebuilt binaries from official release)
+# SDL3
 # =========================================================
-set(SDL3_VERSION 3.2.22)
+set(SDL_MAJOR SDL3)
+set(SDL_VERSION 3.2.22)
 
 FetchContent_Declare(
-  SDL3_prebuilt
-  GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-  GIT_TAG release-${SDL3_VERSION}
+    ${SDL_MAJOR}
+    URL https://github.com/libsdl-org/SDL/releases/download/release-${SDL_VERSION}/${SDL_MAJOR}-${SDL_VERSION}.tar.gz
 )
-FetchContent_MakeAvailable(SDL3_prebuilt)
 
-# SDL3 root (unzipped package looks like SDL3-3.2.22/)
-set(SDL3_ROOT ${SDL3_prebuilt_SOURCE_DIR}/SDL3-${SDL3_VERSION})
-
-# Add includes and libs
-include_directories(${SDL3_ROOT}/include)
-link_directories(${SDL3_ROOT}/lib)
+FetchContent_MakeAvailable(${SDL_MAJOR})
 
 # =========================================================
-# ENet (from GitHub, built automatically)
+# ENet
 # =========================================================
+set(ENET_VERSION 1.3.18)
+
 FetchContent_Declare(
-  ENet
-  GIT_REPOSITORY https://github.com/lsalzman/enet.git
-  GIT_TAG master
+    ENet
+    URL http://enet.bespin.org/download/enet-${ENET_VERSION}.tar.gz
 )
+
 FetchContent_MakeAvailable(ENet)
 
 # =========================================================
@@ -44,9 +45,9 @@ FetchContent_MakeAvailable(ENet)
 # =========================================================
 file(GLOB_RECURSE SOURCES src/*.cpp)
 file(GLOB_RECURSE HEADERS src/*.h)
+
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
-# Link SDL3 and ENet
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL3 enet)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL_MAJOR}::${SDL_MAJOR} enet)
+
 ```
----
