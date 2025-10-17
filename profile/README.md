@@ -29,8 +29,9 @@ Pull request: PR #{ID} {NAME}
 * A pull request should always be reviewed by at least 1, preferably 2, other(s) developers (not the OP).
 * When choosing a reviewer, assign that person to the reviewer through the Discord channel.
 
+---
 
-## 🚀 High-Level Principles
+### 🚀 High-Level Principles
 
 - Express intent clearly — make code self-explanatory.
 - Stick to standard ISO C++ — avoid compiler-specific extensions.
@@ -40,7 +41,7 @@ Pull request: PR #{ID} {NAME}
 - Prefer immutability (`const`) whenever possible.
 
 
-## 🔌 Interfaces / API Design
+### 🔌 Interfaces / API Design
 
 - Keep interfaces explicit; avoid hidden state or side effects.
 - No mutable globals or singletons.
@@ -50,7 +51,7 @@ Pull request: PR #{ID} {NAME}
 - Keep parameters minimal and unambiguous.
 
 
-## 🏗 Classes, Resources & Ownership
+### 🏗 Classes, Resources & Ownership
 
 - Use RAII to manage all resources (memory, files, locks, etc.).
 - Avoid `new` / `delete` directly — prefer `unique_ptr`, `shared_ptr`, or custom RAII wrappers.
@@ -58,7 +59,7 @@ Pull request: PR #{ID} {NAME}
 - Minimize coupling between classes and modules.
 
 
-## 🧮 Expressions, Statements & Logic
+### 🧮 Expressions, Statements & Logic
 
 - Prefer range-based `for` loops and standard algorithms over manual loops.
 - Cache expensive computations — don’t repeat them unnecessarily.
@@ -66,7 +67,7 @@ Pull request: PR #{ID} {NAME}
 - Prefer initialization over assignment.
 
 
-## 🤡 Error Handling & Safety
+### 🤡 Error Handling & Safety
 
 - Use exceptions or well-defined error-handling strategies — never ignore failures.
 - Validate inputs and invariants early.
