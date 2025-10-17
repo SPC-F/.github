@@ -160,7 +160,7 @@ A basic CMakeLists.txt template that utilizes SDL3 and ENet which is cross platf
 # Configuration
 # =========================================================
 cmake_minimum_required(VERSION 3.5)
-project(<PROJECT_NAME>)
+project(scene-poc)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -194,13 +194,62 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(ENet)
 
 # =========================================================
-# Executable
+# Box2D (from GitHub, built automatically)
 # =========================================================
-file(GLOB_RECURSE SOURCES src/*.cpp)
-file(GLOB_RECURSE HEADERS src/*.h)
+FetchContent_Declare(
+  box2d
+  GIT_REPOSITORY https://github.com/erincatto/box2d.git
+  GIT_TAG v3.1.1
+)
+FetchContent_MakeAvailable(box2d)
 
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL_MAJOR}::${SDL_MAJOR} enet)
+# =========================================================
+# ImGui (Dear ImGui) via FetchContent
+# =========================================================
+FetchContent_Declare(
+  imgui
+  GIT_REPOSITORY https://github.com/ocornut/imgui.git
+  GIT_TAG docking
+)
+FetchContent_MakeAvailable(imgui)
 
+# ImGui sources (core + SDL3 + OpenGL3 backends)
+set(IMGUI_SOURCES
+  ${imgui_SOURCE_DIR}/imgui.cpp
+  ${imgui_SOURCE_DIR}/imgui_draw.cpp
+  ${imgui_SOURCE_DIR}/imgui_tables.cpp
+  ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+  ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
+  ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp
+)
+
+# =========================================================
+# Engine library
+# =========================================================
+file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS src/*.cpp)
+
+add_library(engine ${ENGINE_SOURCES} ${IMGUI_SOURCES})
+
+target_include_directories(engine
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+    PRIVATE ${imgui_SOURCE_DIR} ${imgui_SOURCE_DIR}/backends
+)
+
+target_link_libraries(engine
+    PRIVATE ${SDL_MAJOR}::${SDL_MAJOR} enet box2d
+)
+
+# =========================================================
+# executable
+# =========================================================
+add_executable(${PROJECT_NAME} src/main.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE engine ${SDL_MAJOR}::${SDL_MAJOR} enet box2d)
+
+# If your main.cpp needs additional includes for ENet/ImGui:
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${enet_SOURCE_DIR}/include
+    ${imgui_SOURCE_DIR}
+    ${imgui_SOURCE_DIR}/backends
+)
 ```
